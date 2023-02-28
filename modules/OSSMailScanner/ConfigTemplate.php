@@ -51,6 +51,10 @@ return [
 	],
 	'helpdeskBindOpenStatus' => [
 		'default' => 'Answered',
-		'description' => 'What status should be set when a ticket is closed, but a new mail regarding the ticket is received.'
+		'description' => 'What status should be set when a new mail is received regarding a ticket, whose status is closed.'
+	],
+	'helpdeskBindGeneralStatus' => [
+		'default' => 'Answered',
+		'description' => 'What status should be set when a new mail is received regarding a ticket, regardless of its status.'
 	],
 ];

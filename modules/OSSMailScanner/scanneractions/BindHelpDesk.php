@@ -25,13 +25,17 @@ class OSSMailScanner_BindHelpDesk_ScannerAction extends OSSMailScanner_PrefixSca
 			}
 			$conf = OSSMailScanner_Record_Model::getConfig('emailsearch');
 			$recordModel = Vtiger_Record_Model::getInstanceById($id, $this->moduleName);
-			if ('Wait For Response' === $recordModel->get('ticketstatus') && !empty(\Config\Modules\OSSMailScanner::$helpdeskBindNextWaitForResponseStatus)) {
+			if ('Wait For Response' === $recordModel->get('ticketstatus') && !empty(\Config\Modules\OSSMailScanner::$helpdeskBindNextWaitForResponseStatus)) {  // What status should be set when a new mail is received regarding a ticket, whose status is awaiting response.
 				$recordModel->set('ticketstatus', \Config\Modules\OSSMailScanner::$helpdeskBindNextWaitForResponseStatus);
+				$recordModel->save();
+			}
+			if (!empty(\Config\Modules\OSSMailScanner::$helpdeskBindGeneralStatus)) {  // What status should be set when a new mail is received regarding a ticket, regardless of its status.
+				$recordModel->set('ticketstatus', \Config\Modules\OSSMailScanner::$helpdeskBindGeneralStatus);
 				$recordModel->save();
 			}
 			$ticketStatus = array_flip(Settings_SupportProcesses_Module_Model::getTicketStatusNotModify());
 			if (isset($ticketStatus[$recordModel->get('ticketstatus')])) {
-				if ('openTicket' === $conf['changeTicketStatus']) {
+				if ('openTicket' === $conf['changeTicketStatus']) {  // What status should be set when a new mail is received regarding a ticket, whose status is closed.
 					$recordModel->set('ticketstatus', \Config\Modules\OSSMailScanner::$helpdeskBindOpenStatus);
 					$recordModel->save();
 				} elseif ('createTicket' === $conf['changeTicketStatus']) {
